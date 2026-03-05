@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Finance Tracker</title>
+  </head>
+  <body>
+    <h1>My Finance Tracker</h1>
+
+    <input type="text" id="description" placeholder="Description">
+    <input type="number" id="amount" placeholder="Amount">
+    <button id="addIncome">Add Income</button>
+    <button id="addExpense">Add Expense</button>
+
+    <h2>Balance: <span id="balance">0</span></h2>
+    <ul id="transactionList"></ul>
+
+    <script>
+    let transactions = [];
+
+    document.getElementById('addIncome').addEventListener('click', () => {
+        addTransaction('income');
+    });
+
+    document.getElementById('addExpense').addEventListener('click', () => {
+        addTransaction('expense');
+    });
+
+    function addTransaction(type) {
+        const description = document.getElementById('description').value;
+        const amount = parseFloat(document.getElementById('amount').value);
+
+        if (!description || isNaN(amount)) {
+            alert('Please enter a description and amount');
+            return;
+        }
+
+        transactions.push({ description, amount, type });
+
+        document.getElementById('description').value = '';
+        document.getElementById('amount').value = '';
+
+        updateUI();
+    }
+
+    function updateUI() {
+        let balance = 0;
+        const list = document.getElementById('transactionList');
+        list.innerHTML = '';
+
+        transactions.forEach(t => {
+            balance += t.type === 'income' ? t.amount : -t.amount;
+
+            const li = document.createElement('li');
+            li.textContent = `${t.description} - ₦${t.amount} (${t.type})`;
+            li.style.color = t.type === 'income' ? 'green' : 'red';
+            list.appendChild(li);
+        });
+
+        document.getElementById('balance').textContent = `₦${balance}`;
+    }
+</script>
+
+  </body>
+</html>
